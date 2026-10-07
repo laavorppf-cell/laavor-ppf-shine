@@ -1,12 +1,13 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowRight, ShieldCheck, Sparkles, Sun } from "lucide-react";
-import { products } from "@/lib/products";
+import { catalogQuery, waLink } from "@/lib/products";
 
 export const Route = createFileRoute("/product/$handle")({
-  loader: ({ params }) => {
-    const product = products.find((p) => p.handle === params.handle);
+  loader: async ({ params, context }) => {
+    const data = await context.queryClient.ensureQueryData(catalogQuery);
+    const product = data.products.find((p) => p.handle === params.handle);
     if (!product) throw notFound();
-    return product;
+    return { ...product, settings: data.settings };
   },
   head: ({ loaderData }) => ({
     meta: [
@@ -47,7 +48,7 @@ function ProductPage() {
       <main className="relative z-10 mx-auto grid max-w-[1280px] gap-5 px-6 pb-16 pt-4 lg:grid-cols-2">
         <div className="glass-card p-5">
           <img
-            src={product.image}
+            src={product.image_url}
             alt={product.title}
             width={976}
             height={688}
@@ -76,14 +77,19 @@ function ProductPage() {
               <div className="text-xs text-muted-foreground">السعر</div>
               <div className="font-mono text-3xl font-bold text-accent">{product.price}</div>
             </div>
-            <a
-              href="https://wa.me/9647000000000"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full bg-primary px-7 py-3.5 text-sm font-bold text-primary-foreground ring-1 ring-foreground/20 transition-transform hover:scale-[1.03]"
-            >
-              اطلب الآن عبر واتساب
-            </a>
+            <div className="flex flex-col gap-2">
+              {[product.settings.phone1, product.settings.phone2].filter(Boolean).map((ph) => (
+                <a
+                  key={ph}
+                  href={waLink(ph, `مرحباً LaAvor، أود طلب ${product.title} (${product.sku}) بسعر ${product.price}`)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full bg-primary px-6 py-3 text-center text-sm font-bold text-primary-foreground ring-1 ring-foreground/20 transition-transform hover:scale-[1.03]"
+                >
+                  اطلب عبر واتساب <span dir="ltr" className="font-mono">{ph}</span>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </main>

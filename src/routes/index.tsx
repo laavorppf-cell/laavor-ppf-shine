@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import heroImg from "@/assets/hero-ppf.jpg";
-import { products } from "@/lib/products";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { catalogQuery, waLink } from "@/lib/products";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -22,10 +23,13 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(catalogQuery),
   component: Index,
 });
 
 function Index() {
+  const { data } = useSuspenseQuery(catalogQuery);
+  const { products, settings } = data;
   return (
     <div dir="rtl" className="relative min-h-screen overflow-hidden bg-background text-foreground antialiased">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-aurora" />
@@ -152,7 +156,7 @@ function Index() {
             >
               <div className="aspect-[16/10] w-full overflow-hidden rounded-2xl border border-foreground/10">
                 <img
-                  src={p.image}
+                  src={p.image_url}
                   alt={p.title}
                   loading="lazy"
                   width={976}
@@ -180,15 +184,20 @@ function Index() {
               للطلبات والاستفسارات — تواصل معنا لتحصل على عرض سعر وتركيب معتمد.
             </p>
           </div>
-          <a
-            href="https://wa.me/9647000000000"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-primary-foreground ring-1 ring-foreground/20 transition-transform hover:scale-[1.03]"
-          >
-            تواصل واتساب
-            <ArrowLeft className="size-4" />
-          </a>
+          <div className="flex flex-wrap gap-3">
+            {[settings.phone1, settings.phone2].filter(Boolean).map((ph) => (
+              <a
+                key={ph}
+                href={waLink(ph, "مرحباً LaAvor، أود الاستفسار عن بكرات PPF")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-primary-foreground ring-1 ring-foreground/20 transition-transform hover:scale-[1.03]"
+              >
+                واتساب <span dir="ltr" className="font-mono">{ph}</span>
+                <ArrowLeft className="size-4" />
+              </a>
+            ))}
+          </div>
         </div>
         <div className="border-t border-foreground/10">
           <div className="mx-auto flex max-w-[1280px] items-center justify-between px-6 py-5 font-mono text-xs text-muted-foreground">
