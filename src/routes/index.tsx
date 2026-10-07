@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import heroAsset from "@/assets/laavor-facebook-car.jpg.asset.json";
-import ppfAsset from "@/assets/laavor-facebook-ppf.jpg.asset.json";
+import ppfAsset from "@/assets/laavor-specs.jpg.asset.json";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { catalogQuery, waLink } from "@/lib/products";
 
