@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
-import heroImg from "@/assets/hero-ppf.jpg";
+import heroAsset from "@/assets/laavor-facebook-car.jpg.asset.json";
+import ppfAsset from "@/assets/laavor-facebook-ppf.jpg.asset.json";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { catalogQuery, waLink } from "@/lib/products";
 
@@ -105,11 +106,11 @@ function Index() {
         </div>
         <div className="glass-card p-5 lg:col-span-4">
           <img
-            src={heroImg}
-            alt="تركيب فيلم حماية طلاء LaAvor على سيارة"
-            width={800}
-            height={912}
-            className="h-full min-h-[360px] w-full rounded-2xl border border-foreground/10 object-cover"
+            src={heroAsset.url}
+            alt="سيارة لامبورغيني بطلاء مطفي من صفحة LaAvor PPF"
+            width={960}
+            height={640}
+            className="h-full min-h-[360px] w-full rounded-2xl border border-foreground/10 object-contain"
           />
         </div>
       </section>
@@ -138,6 +139,18 @@ function Index() {
             مقاومة للأشعة UV والعوامل الكيميائية مع ضمان اصفرار لعشر سنوات.
           </p>
         </div>
+      </section>
+
+      <section className="relative z-10 mx-auto max-w-[1280px] px-6 pb-10">
+        <h2 className="mb-6 text-3xl font-black">LaAvor PPF</h2>
+        <img
+          src={ppfAsset.url}
+          alt="صورة LaAvor PPF الأصلية: سيارة رياضية وجدول مواصفات فيلم الحماية"
+          width={720}
+          height={510}
+          loading="lazy"
+          className="mx-auto h-auto w-full max-w-[900px] rounded-lg border border-foreground/10"
+        />
       </section>
 
       {/* Products */}
